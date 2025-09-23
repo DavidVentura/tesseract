@@ -465,12 +465,14 @@ else()
   endif(NOT Leptonica_FOUND)
   include_directories(${Leptonica_INCLUDE_DIRS})
 
-  check_leptonica_tiff_support()
-  if ((NOT LEPT_TIFF_RESULT EQUAL 0) AND LEPT_TIFF_COMPILE_SUCCESS)
-    message(NOTICE "Leptonica was build without TIFF support! Disabling TIFF support...")
-    set(DISABLE_TIFF ON)
-  elseif(NOT ${CMAKE_VERSION} VERSION_LESS "3.25")
-    message(STATUS "Leptonica was build with TIFF support.")
+  if(NOT DISABLE_TIFF)
+    check_leptonica_tiff_support()
+    if ((NOT LEPT_TIFF_RESULT EQUAL 0) AND LEPT_TIFF_COMPILE_SUCCESS)
+      message(NOTICE "Leptonica was build without TIFF support! Disabling TIFF support...")
+      set(DISABLE_TIFF ON)
+    elseif(NOT ${CMAKE_VERSION} VERSION_LESS "3.25")
+      message(STATUS "Leptonica was build with TIFF support.")
+    endif()
   endif()
 
   # Check for optional libraries.
@@ -962,11 +964,6 @@ endif()
 
 if(ANDROID)
   add_definitions(-DANDROID)
-  find_package(CpuFeaturesNdkCompat REQUIRED)
-  target_include_directories(
-    libtesseract
-    PRIVATE "${CpuFeaturesNdkCompat_DIR}/../../../include/ndk_compat")
-  target_link_libraries(libtesseract PRIVATE CpuFeatures::ndk_compat)
 endif()
 
 # ##############################################################################

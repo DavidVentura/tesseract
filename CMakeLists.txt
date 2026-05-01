@@ -657,17 +657,6 @@ include(cmake/SourceLists.cmake)
 set(TESSERACT_SRC ${TESSERACT_SRC_CORE})
 
 if(DISABLED_LEGACY_ENGINE)
-  # prepend path to list of source files
-  function(prepend_path srcs path)
-    set(tmp, "")
-    foreach(src IN LISTS ${srcs})
-      list(APPEND tmp ${path}/${src})
-    endforeach(src ${srcs})
-    set(${srcs}
-        ${tmp}
-        PARENT_SCOPE)
-  endfunction()
-
   set(TESSERACT_SRC_LEGACY
       src/ccmain/adaptions.cpp
       src/ccmain/docqual.cpp
@@ -731,7 +720,6 @@ if(DISABLED_LEGACY_ENGINE)
       src/wordrec/render.cpp
       src/wordrec/segsearch.cpp
       src/wordrec/wordclass.cpp)
-  prepend_path(TESSERACT_SRC_LEGACY "${CMAKE_CURRENT_SOURCE_DIR}")
   list(REMOVE_ITEM TESSERACT_SRC ${TESSERACT_SRC_LEGACY})
 endif(DISABLED_LEGACY_ENGINE)
 
